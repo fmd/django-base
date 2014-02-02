@@ -8,15 +8,20 @@ class Ezconf():
         except:
             self.data = {
                 'project': {
-
+                    'name':'',
+                    'base_dir':'',
+                    'project_dir':''
                 },
 
                 'env': {
-
+                    'debug':False
                 },
 
                 'db': {
-
+                    'engine':'',
+                    'user':'',
+                    'name':'',
+                    'pass':''
                 },
             }
 
@@ -31,7 +36,7 @@ class Ezconf():
 
     def prompt_engine(self, p):
         if p == "django.db.backends.postgresql_psycopg2":
-            return "postgres" 
+            return "postgres"
         elif p == "django.db.backends.mysql":
             return "mysql"
 
@@ -57,6 +62,7 @@ class Ezconf():
     def deprompt_bool(self, p): 
         if p == 'y':
             return True
+
         if p == 'n':
             return False
 

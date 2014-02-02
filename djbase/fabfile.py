@@ -5,10 +5,6 @@ from fabric.colors import green, red
 
 ezconf = ezconf.Ezconf()
 
-def server():
-    env.host_string = prompt("Deploy to server: ")
-    env.user = prompt("User: ")
-
 def _cache_backend():
     if 'backend' in ezconf.data['cache'].keys():
         default = ezconf.prompt_cache(ezconf.data['cache']['backend'])
@@ -123,7 +119,7 @@ def config():
     env.BASE_DIR = os.path.dirname(os.path.dirname(__file__))
     ezconf.data['project']['base_dir'] = env.BASE_DIR
 
-    env.PROJECT_DIR = os.path.dirname(env.BASE_DIR + "/" + env.PROJECT_NAME + "/") 
+    env.PROJECT_DIR = os.path.dirname(__file__)
     ezconf.data['project']['project_dir'] = env.PROJECT_DIR
     
     env.DEBUG = None
@@ -181,7 +177,7 @@ def migrate():
 
 def createdb():
     with lcd(env.BASE_DIR):
-        run("createdb " + env.PROJECT_NAME)
+        run("createdb " + env.DB_NAME)
 
 def local():
     env.host_string = "127.0.0.1"
@@ -189,4 +185,8 @@ def local():
 
 def clear_config():
     ezconf.clear_config()
+
+def server():
+    env.host_string = prompt("Deploy to server: ")
+    env.user = prompt("User: ")
 

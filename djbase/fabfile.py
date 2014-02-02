@@ -126,12 +126,20 @@ def config():
 
     ezconf.save()
 
-def db():
+def load_config():
+    env.PROJECT_NAME = ezconf.data['project']['name']
+    env.BASE_DIR = ezconf.data['project']['base_dir']
+    env.PROJECT_DIR = ezconf.data['project']['project_dir']
+    env.DEBUG = ezconf.data['env']['debug']
+    env.DB_ENGINE = ezconf.data['db']['engine']
+    env.DB_NAME = ezconf.data['db']['name']
+    env.DB_USER = ezconf.data['db']['user']
+    env.DB_PASS = ezconf.data['db']['pass']
+
+def createdb():
     with lcd(env.BASE_DIR):
         run("createdb " + env.PROJECT_NAME)
-        
-
 
 def local():
     env.host_string = "127.0.0.1"
-    db()
+    load_config()

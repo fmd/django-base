@@ -1,14 +1,21 @@
 import os
+import ezconf
 from fabric.api import *
 from fabric.colors import green, red
 
+ezconf = ezconf.Ezconf()
 
 def server():
     env.host_string = prompt("Deploy to server: ")
     env.user = prompt("User: ")
 
 def _engine():
-    engine = prompt("Database engine (mysql, postgres): ")
+    if 'engine' in ezconf.data['db'].keys():
+        default = ezconf.data['db']['engine']
+    else:
+        default = ""
+
+    engine = prompt("Database engine (mysql, postgres): ", default = default)
     ret = None
     if engine == "postgres":
         ret = "django.db.backends.postgresql_psycopg2"
@@ -22,28 +29,48 @@ def _engine():
     return ret
 
 def _name():
-    name = prompt("Database name: ")
+    if 'name' in ezconf.data['db'].keys():
+        default = ezconf.data['db']['name']
+    else:
+        default = ""
+
+    name = prompt("Database name: ", default = default)
     if len(name) == 0:
         print(red("Please enter a database name."))
         return False
     return name
 
 def _user():
-    username = prompt("Database username: ")
+    if 'user' in ezconf.data['db'].keys():
+        default = ezconf.data['db']['user']
+    else:
+        default = ""
+
+    username = prompt("Database username: ", default = default)
     if len(username) == 0:
         print(red("Please enter a database username."))
         return False
     return username
 
 def _pass():
-    password = prompt("Database password: ")
+    if 'pass' in ezconf.data['db'].keys():
+        default = ezconf.data['db']['pass']
+    else:
+        default = ""
+
+    password = prompt("Database password: ", default = default)
     if len(password) == 0:
         print(red("Please enter a database password."))
         return False
     return password
 
 def _debug():
-    d = prompt("Deploy with debug mode on? (y/n): ")
+    if 'debug' in ezconf.data['env'].keys():
+        default = ezconf.prompt(ezconf.data['env']['debug'])
+    else:
+        default = ""
+
+    d = prompt("Deploy with debug mode on? (y/n): ", default = default)
     if d == 'y':
         return True
     elif d == 'n':
@@ -53,61 +80,40 @@ def _debug():
     return None
 
 def config():
-    env.conf = {}
-    env.FAB_PROJECT_NAME = "djbase"
-    env.conf["FAB_PROJECT_NAME"] = env.FAB_PROJECT_NAME
-
-    env.FAB_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-    env.conf["FAB_BASE_DIR"] = env.FAB_BASE_DIR
-
-    env.FAB_PROJECT_DIR = os.path.dirname(env.FAB_BASE_DIR + "/" + env.FAB_PROJECT_NAME + "/") 
-    env.conf["FAB_PROJECT_DIR"] = env.FAB_PROJECT_DIR
     
-    env.FAB_DEBUG = None
-    while env.FAB_DEBUG is None:
-        env.FAB_DEBUG = _debug()
-    env.conf["FAB_DEBUG"] = env.FAB_DEBUG
+    env.PROJECT_NAME = "djbase"
+    ezconf.data['project']['name'] = env.PROJECT_NAME
 
-    env.FAB_DB_ENGINE = False
-    while not env.FAB_DB_ENGINE:
-        env.FAB_DB_ENGINE = _engine()
-    env.conf["FAB_DB_ENGINE"] = env.FAB_DB_ENGINE
+    env.BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+    ezconf.data['project']['base_dir'] = env.BASE_DIR
 
-    env.FAB_DB_NAME = False
-    while not env.FAB_DB_NAME:
-        env.FAB_DB_NAME = _name()
-    env.conf["FAB_DB_NAME"] = env.FAB_DB_NAME
+    env.PROJECT_DIR = os.path.dirname(env.BASE_DIR + "/" + env.PROJECT_NAME + "/") 
+    ezconf.data['project']['project_dir'] = env.PROJECT_DIR
+    
+    env.DEBUG = None
+    while env.DEBUG is None:
+        env.DEBUG = _debug()
+    ezconf.data['env']['debug'] = ezconf.deprompt(env.DEBUG)
 
-    env.FAB_DB_USER = False
-    while not env.FAB_DB_USER:
-        env.FAB_DB_USER = _user()
-    env.conf["FAB_DB_USER"] = env.FAB_DB_USER
+    env.DB_ENGINE = False
+    while not env.DB_ENGINE:
+        env.DB_ENGINE = _engine()
+    ezconf.data['db']['engine'] = env.DB_ENGINE
 
-    env.FAB_DB_PASS = False
-    while not env.FAB_DB_PASS:
-        env.FAB_DB_PASS = _pass()
-    env.conf["FAB_DB_PASS"] = env.FAB_DB_PASS
+    env.DB_NAME = False
+    while not env.DB_NAME:
+        env.DB_NAME = _name()
+    ezconf.data['db']['name'] = env.DB_NAME
 
-def _value_string(name, value):
-    v_str = ""
-    if type(value) is int:
-        v_str = str(value)
-    elif type(value) is bool:
-        v_str = str(value)
-    else:
-        v_str = "'" + str(value) + "'"
+    env.DB_USER = False
+    while not env.DB_USER:
+        env.DB_USER = _user()
+    ezconf.data['db']['user'] = env.DB_USER
 
-    return name + " = " + v_str
+    env.DB_PASS = False
+    while not env.DB_PASS:
+        env.DB_PASS = _pass()
+    ezconf.data['db']['pass'] = env.DB_PASS
 
 def local():
-    env.host_string = "127.0.0.1"
-    conf_file = env.FAB_PROJECT_DIR + "/generated_config.py"
-
-    run("touch " + conf_file + " && cat /dev/null > " + conf_file)
-
-    for name, value in env.conf.iteritems():
-        print(green(name) + ": " + red(value))
-
-        v = _value_string(name, value)
-
-        run ("echo -e \""+ v +"\" >> "+conf_file)
+    ezconf.save()

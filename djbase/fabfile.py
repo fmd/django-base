@@ -164,6 +164,8 @@ def config():
     ezconf.save()
 
 def load_config():
+    env.CACHE_LOCATION = ezconf.data['cache']['location'] 
+    env.CACHE_BACKEND = ezconf.data['cache']['backend']
     env.PROJECT_NAME = ezconf.data['project']['name']
     env.PROJECT_DIR = ezconf.data['project']['project_dir']
     env.DB_ENGINE = ezconf.data['db']['engine']

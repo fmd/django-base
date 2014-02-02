@@ -11,18 +11,14 @@ def server():
 
 def _engine():
     if 'engine' in ezconf.data['db'].keys():
-        default = ezconf.data['db']['engine']
+        default = ezconf.prompt_engine(ezconf.data['db']['engine'])
     else:
         default = ""
 
     engine = prompt("Database engine (mysql, postgres): ", default = default)
-    ret = None
-    if engine == "postgres":
-        ret = "django.db.backends.postgresql_psycopg2"
-    elif engine == "mysql":
-        ret = "django.db.backends.mysql"
+    ret = ezconf.deprompt_engine(engine)
 
-    if not ret:
+    if ret is None:
         print(red("Bad database engine: " + engine))
         return False
 
@@ -66,18 +62,17 @@ def _pass():
 
 def _debug():
     if 'debug' in ezconf.data['env'].keys():
-        default = ezconf.prompt(ezconf.data['env']['debug'])
+        default = ezconf.prompt_bool(ezconf.data['env']['debug'])
     else:
         default = ""
 
     d = prompt("Deploy with debug mode on? (y/n): ", default = default)
-    if d == 'y':
-        return True
-    elif d == 'n':
-        return False
+    ret = ezconf.deprompt_bool(d)
+    if ret is None:
+        print(red("Please choose 'y' or 'n'."))
+        return None
 
-    print(red("Please choose 'y' or 'n'."))
-    return None
+    return ret
 
 def config():
     
@@ -93,7 +88,7 @@ def config():
     env.DEBUG = None
     while env.DEBUG is None:
         env.DEBUG = _debug()
-    ezconf.data['env']['debug'] = ezconf.deprompt(env.DEBUG)
+    ezconf.data['env']['debug'] = env.DEBUG
 
     env.DB_ENGINE = False
     while not env.DB_ENGINE:

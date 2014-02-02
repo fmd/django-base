@@ -24,14 +24,29 @@ class Ezconf():
     def load(self, file = "config.json"):
         handle = open(file)
         self.data = json.load(handle)
-        pprint(self.data)
         handle.close()
 
     def save(self, file = "config.json"):
         with open("config.json", 'w') as handle:
-            json.dump(self.data, handle)
+            json.dump(self.data, handle, indent=4)
 
-    def prompt(self, p):
+    def prompt_engine(self, p):
+        if p == "django.db.backends.postgresql_psycopg2":
+            return "postgres" 
+        elif p == "django.db.backends.mysql":
+            return "mysql"
+
+        return p
+
+    def deprompt_engine(self, p):
+        if p == "postgres":
+            return "django.db.backends.postgresql_psycopg2"
+        elif p == "mysql":
+            return "django.db.backends.mysql"
+
+        return None
+
+    def prompt_bool(self, p):
         if p is True:
             return 'y'
 
@@ -40,10 +55,10 @@ class Ezconf():
 
         return p
 
-    def deprompt(self, p): 
+    def deprompt_bool(self, p): 
         if p == 'y':
             return True
         if p == 'n':
             return False
 
-        return p
+        return None

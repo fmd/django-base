@@ -87,7 +87,6 @@ def _proj_name():
     return name
 
 def config():
-    
     env.PROJECT_NAME = None
     while env.PROJECT_NAME is None:
         env.PROJECT_NAME = _proj_name()
@@ -135,6 +134,10 @@ def load_config():
     env.DB_NAME = ezconf.data['db']['name']
     env.DB_USER = ezconf.data['db']['user']
     env.DB_PASS = ezconf.data['db']['pass']
+
+def migrate():
+    with lcd(env.BASE_DIR):
+        run("python manage.py migrate")
 
 def createdb():
     with lcd(env.BASE_DIR):

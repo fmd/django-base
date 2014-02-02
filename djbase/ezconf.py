@@ -1,6 +1,5 @@
 import os
 import json
-from pprint import pprint
 
 class Ezconf():
     def __init__(self):

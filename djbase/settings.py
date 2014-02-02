@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
 from ezconf import *
-
+ezconf = ezconf.Ezconf()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -27,10 +27,10 @@ ALLOWED_HOSTS = ['*']
 DEBUG = FAB_DEBUG
 DATABASES = {
     'default': {
-        'ENGINE': FAB_DB_ENGINE,
-        'NAME': FAB_DB_NAME,
-        'USER': FAB_DB_USER,
-        'PASSWORD': FAB_DB_PASS,
+        'ENGINE': ezconf.data['db']['engine'],
+        'NAME': ezconf.data['db']['name'],
+        'USER': ezconf.data['db']['user'],
+        'PASSWORD': ezconf.data['db']['pass'],
         'HOST': '',
         'PORT': '',
     }

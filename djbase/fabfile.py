@@ -189,4 +189,3 @@ def clear_config():
 def server():
     env.host_string = prompt("Deploy to server: ")
     env.user = prompt("User: ")
-

@@ -1,6 +1,8 @@
 import os
 import json
 
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 class Ezconf():
     def __init__(self):
         try:
@@ -14,7 +16,7 @@ class Ezconf():
                 },
 
                 'env': {
-                    'debug':False
+                    'debug':None
                 },
 
                 'db': {
@@ -26,12 +28,16 @@ class Ezconf():
             }
 
     def load(self, file = "config.json"):
+        file = BASE_DIR + "/" + file
+        
         handle = open(file)
         self.data = json.load(handle)
         handle.close()
 
     def save(self, file = "config.json"):
-        with open("config.json", 'w') as handle:
+        file = BASE_DIR + "/" + file
+
+        with open(file, 'w') as handle:
             json.dump(self.data, handle, indent=4)
 
     def prompt_engine(self, p):
@@ -40,7 +46,7 @@ class Ezconf():
         elif p == "django.db.backends.mysql":
             return "mysql"
 
-        return p
+        return ''
 
     def deprompt_engine(self, p):
         if p == "postgres":
@@ -57,7 +63,7 @@ class Ezconf():
         if p is False:
             return 'n'
 
-        return p
+        return ''
 
     def deprompt_bool(self, p): 
         if p == 'y':

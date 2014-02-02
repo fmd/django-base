@@ -5,27 +5,38 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 class Ezconf():
     def __init__(self):
+        self.skel_data = {
+            'cache': {
+                'backend':'',
+                'location':'127.0.0.1:11211',
+            },
+
+            'project': {
+                'name':'',
+                'base_dir':'',
+                'project_dir':''
+            },
+
+            'env': {
+                'debug':None
+            },
+
+            'db': {
+                'engine':'',
+                'user':'',
+                'name':'',
+                'pass':''
+            },
+        }
+
         try:
             self.load()
         except:
-            self.data = {
-                'project': {
-                    'name':'',
-                    'base_dir':'',
-                    'project_dir':''
-                },
+            self.data = self.skel_data
 
-                'env': {
-                    'debug':None
-                },
-
-                'db': {
-                    'engine':'',
-                    'user':'',
-                    'name':'',
-                    'pass':''
-                },
-            }
+    def clear_config(self):
+        self.data = self.skel_data
+        self.save()
 
     def load(self, file = "config.json"):
         file = BASE_DIR + "/" + file
@@ -46,7 +57,7 @@ class Ezconf():
         elif p == "django.db.backends.mysql":
             return "mysql"
 
-        return ''
+        return ""
 
     def deprompt_engine(self, p):
         if p == "postgres":
@@ -54,6 +65,16 @@ class Ezconf():
         elif p == "mysql":
             return "django.db.backends.mysql"
 
+        return None
+
+    def prompt_cache(self, p):
+        if p == "django.core.cache.backends.memcached.MemcachedCache":
+            return "memcached"
+        return ""
+
+    def deprompt_cache(self, p):
+        if p == "memcached":
+            return "django.core.cache.backends.memcached.MemcachedCache"
         return None
 
     def prompt_bool(self, p):

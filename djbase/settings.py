@@ -37,6 +37,13 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': ezc.data['cache']['engine'],
+        'LOCATION': ezc.data['cache']['location'],
+    }
+}
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',

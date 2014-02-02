@@ -74,9 +74,23 @@ def _debug():
 
     return ret
 
+def _proj_name():
+    if 'name' in ezconf.data['project'].keys():
+        default = ezconf.data['project']['name']
+    else:
+        default = ""
+
+    name = prompt("Project name: ", default = default)
+    if len(name) == 0:
+        print(red("Please enter a project name."))
+        return False
+    return name
+
 def config():
     
-    env.PROJECT_NAME = "djbase"
+    env.PROJECT_NAME = None
+    while env.PROJECT_NAME is None:
+        env.PROJECT_NAME = _proj_name()
     ezconf.data['project']['name'] = env.PROJECT_NAME
 
     env.BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -110,5 +124,14 @@ def config():
         env.DB_PASS = _pass()
     ezconf.data['db']['pass'] = env.DB_PASS
 
-def local():
     ezconf.save()
+
+def db():
+    with lcd(env.BASE_DIR):
+        run("createdb " + env.PROJECT_NAME)
+        
+
+
+def local():
+    env.host_string = "127.0.0.1"
+    db()

@@ -1,5 +1,5 @@
 """
-Django settings for proj project.
+Django settings for djbase project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -8,8 +8,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
-from ezconf import *
-ezconf = ezconf.Ezconf()
+import ezconf
+ezc = ezconf.Ezconf()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -24,13 +24,14 @@ SECRET_KEY = '#&@m%-)w0r%ubr99j)d9_e4s)j75q&uq+i#cn2u2^^heze%pmq'
 ALLOWED_HOSTS = ['*']
 
 # Application definition
-DEBUG = FAB_DEBUG
+DEBUG = ezc.data['env']['debug']
+
 DATABASES = {
     'default': {
-        'ENGINE': ezconf.data['db']['engine'],
-        'NAME': ezconf.data['db']['name'],
-        'USER': ezconf.data['db']['user'],
-        'PASSWORD': ezconf.data['db']['pass'],
+        'ENGINE': ezc.data['db']['engine'],
+        'NAME': ezc.data['db']['name'],
+        'USER': ezc.data['db']['user'],
+        'PASSWORD': ezc.data['db']['pass'],
         'HOST': '',
         'PORT': '',
     }
@@ -54,9 +55,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'proj.urls'
+ROOT_URLCONF = 'djbase.urls'
 
-WSGI_APPLICATION = 'proj.wsgi.application'
+WSGI_APPLICATION = 'djbase.wsgi.application'
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/

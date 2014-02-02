@@ -9,6 +9,34 @@ def server():
     env.host_string = prompt("Deploy to server: ")
     env.user = prompt("User: ")
 
+def _cache_backend():
+    if 'backend' in ezconf.data['cache'].keys():
+        default = ezconf.prompt_cache(ezconf.data['cache']['backend'])
+    else:
+        default = ""
+
+    cache_backend = prompt("Caching backend (memcached): ", default = default)
+    ret = ezconf.deprompt_cache(cache_backend)
+
+    if ret is None:
+        print(red("Bad caching backend: " + cache_backend))
+        return False
+
+    return ret
+
+def _cache_location():
+    if 'location' in ezconf.data['cache'].keys():
+        default = ezconf.data['cache']['location']
+    else:
+        default = ""  
+
+    cache_location = prompt("Caching location: ", default = default)
+    if len(cache_location) == 0:
+        print(red("Please enter a caching location: " + cache_location))
+        return False
+
+    return cache_location
+
 def _engine():
     if 'engine' in ezconf.data['db'].keys():
         default = ezconf.prompt_engine(ezconf.data['db']['engine'])
@@ -123,17 +151,27 @@ def config():
         env.DB_PASS = _pass()
     ezconf.data['db']['pass'] = env.DB_PASS
 
+    env.CACHE_BACKEND = False
+    while not env.CACHE_BACKEND:
+        env.CACHE_BACKEND = _cache_backend()
+    ezconf.data['cache']['backend'] = env.CACHE_BACKEND
+
+    env.CACHE_LOCATION = False
+    while not env.CACHE_LOCATION:
+        env.CACHE_LOCATION = _cache_location()
+    ezconf.data['cache']['location'] = env.CACHE_LOCATION
+
     ezconf.save()
 
 def load_config():
     env.PROJECT_NAME = ezconf.data['project']['name']
-    env.BASE_DIR = ezconf.data['project']['base_dir']
     env.PROJECT_DIR = ezconf.data['project']['project_dir']
-    env.DEBUG = ezconf.data['env']['debug']
     env.DB_ENGINE = ezconf.data['db']['engine']
+    env.BASE_DIR = ezconf.data['project']['base_dir']
     env.DB_NAME = ezconf.data['db']['name']
     env.DB_USER = ezconf.data['db']['user']
     env.DB_PASS = ezconf.data['db']['pass']
+    env.DEBUG = ezconf.data['env']['debug']
 
 def migrate():
     with lcd(env.BASE_DIR):
@@ -146,3 +184,7 @@ def createdb():
 def local():
     env.host_string = "127.0.0.1"
     load_config()
+
+def clear_config():
+    ezconf.clear_config()
+

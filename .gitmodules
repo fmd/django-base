@@ -1,0 +1,3 @@
+[submodule "django-trunk"]
+	path = django-trunk
+	url = git://github.com/django/django.git

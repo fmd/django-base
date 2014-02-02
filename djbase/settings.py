@@ -8,6 +8,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
+from ezconf import *
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -22,6 +24,17 @@ SECRET_KEY = '#&@m%-)w0r%ubr99j)d9_e4s)j75q&uq+i#cn2u2^^heze%pmq'
 ALLOWED_HOSTS = ['*']
 
 # Application definition
+DEBUG = FAB_DEBUG
+DATABASES = {
+    'default': {
+        'ENGINE': FAB_DB_ENGINE,
+        'NAME': FAB_DB_NAME,
+        'USER': FAB_DB_USER,
+        'PASSWORD': FAB_DB_PASS,
+        'HOST': '',
+        'PORT': '',
+    }
+}
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -63,5 +76,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
-
-from config import *

@@ -31,7 +31,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     # Our apps
-    'djbase.apps.user_auth',
     'djbase.apps.frontend',
 )
 

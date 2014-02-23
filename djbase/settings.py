@@ -31,7 +31,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     # Our apps
-    'djbase.user_auth',
+    'djbase.apps.user_auth',
 )
 
 MIDDLEWARE_CLASSES = (

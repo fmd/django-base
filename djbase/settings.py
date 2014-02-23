@@ -65,6 +65,10 @@ if lazy.get('db.user'):
 if lazy.get('db.pass'):
     DATABASES['default']['PASS'] = lazy.get('db.pass')
 
+TEMPLATE_DIRS = (
+    os.path.join(os.path.dirname(__file__), 'templates'),
+)
+
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
 

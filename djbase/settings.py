@@ -58,11 +58,11 @@ if lazy.get('db._enabled'):
         }
     }
 
-if lazy.get('db.user'):
-    DATABASES['default']['USER'] = lazy.get('db.user')
+    if lazy.get('db.user'):
+        DATABASES['default']['USER'] = lazy.get('db.user')
 
-if lazy.get('db.pass'):
-    DATABASES['default']['PASS'] = lazy.get('db.pass')
+    if lazy.get('db.pass'):
+        DATABASES['default']['PASS'] = lazy.get('db.pass')
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates'),

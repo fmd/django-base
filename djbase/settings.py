@@ -15,20 +15,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 lazy = lazyconf.Lazyconf().load(BASE_DIR)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = lazy.get('env.secret_key')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 
 DEBUG = lazy.get('env.debug')
 TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
-
-# Application definition
 
 INSTALLED_APPS = (
     'django.contrib.contenttypes',
@@ -52,17 +44,22 @@ ROOT_URLCONF = 'djbase.urls'
 
 WSGI_APPLICATION = 'djbase.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 if lazy.get('db._enabled'):
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    DATABASES = {
+        'default': {
+            'ENGINE': lazy.get('db.engine'),
+            'NAME': lazy.get('db.name'),
+        }
     }
-}
+
+if lazy.get('db.user'):
+    DATABASES['default']['USER'] = lazy.get('db.user')
+
+if lazy.get('db.pass'):
+    DATABASES['default']['PASS'] = lazy.get('db.pass')
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/

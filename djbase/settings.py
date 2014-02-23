@@ -10,22 +10,23 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import lazyconf
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+lazy = lazyconf.Lazyconf().load(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!np&uj-#zg5vub=1^r@rl3_@cj8wkp@$!(_5=y%$nq%z+9)z7t'
+SECRET_KEY = lazy.get('env.secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-TEMPLATE_DEBUG = True
+DEBUG = lazy.get('env.debug')
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -55,6 +56,7 @@ WSGI_APPLICATION = 'djbase.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
+if lazy.get('db._enabled'):
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

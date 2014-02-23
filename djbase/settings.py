@@ -29,6 +29,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Our apps
+    'djbase.user_auth',
 )
 
 MIDDLEWARE_CLASSES = (

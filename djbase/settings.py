@@ -32,6 +32,7 @@ INSTALLED_APPS = (
 
     # Our apps
     'djbase.apps.user_auth',
+    'djbase.apps.frontend',
 )
 
 MIDDLEWARE_CLASSES = (

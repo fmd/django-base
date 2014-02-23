@@ -1,0 +1,46 @@
+{
+    "_internal": {
+        "labels": {
+            "project": "Project Settings", 
+            "project.dir": "Full path to project", 
+            "cache.location": "Caching location", 
+            "db.name": "Database name (Not username!)", 
+            "db.engine": "Database Engine", 
+            "db": "Database Connection", 
+            "project._enabled": "Enable project settings", 
+            "db.pass": "Database password", 
+            "cache.backend": "Caching backend", 
+            "db.user": "Database username", 
+            "cache": "Cache Settings", 
+            "env": "Application Environment", 
+            "env.debug": "Debug mode", 
+            "cache._enabled": "Enable caching"
+        }, 
+        "selects": {
+            "cache.backend": {
+                "memcached": "django.core.cache.backends.memcached.MemcachedCache"
+            }, 
+            "db.engine": {
+                "postgres": "django.db.backends.postgresql_psycopg2", 
+                "mysql": "django.db.backends.mysql",
+		"sqlite": "django.db.backends.sqlite3"
+            }
+        }
+    }, 
+    "cache": {
+        "_enabled": false, 
+        "location": "127.0.0.1:11211", 
+        "backend": ""
+    }, 
+    "db": {
+	"_enabled": false,
+        "engine": "",
+        "user": "", 
+        "name": "", 
+        "pass": ""
+    }, 
+    "env": {
+        "debug": true, 
+        "secret_key": ""
+    }
+}
